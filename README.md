@@ -39,7 +39,7 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 
 The export above, plus a page that splits #4471 into its problems, one GitHub issue each:
 
-- page: `src/routes/kb/incidents/4471/problems/+page.svx`, logic in `src/lib/kb/problems.ts` and
+- page: `src/routes/kb/incidents/4471-problems/+page.svx`, logic in `src/lib/kb/problems.ts` and
   `src/lib/kb/ProblemTable.svelte`
-- the page as the desk sees it: `rendered/kb/incidents/4471/problems.html` (and `.png`)
+- the page as the desk sees it: `rendered/kb/incidents/4471-problems.html` (and `.png`)
 - build: `npm install && npm run build` (SvelteKit + mdsvex), output in `build/`
