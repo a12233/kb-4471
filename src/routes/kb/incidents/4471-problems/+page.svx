@@ -1,7 +1,7 @@
 ---
 layout: runbook
 title: '#4471 · the problems inside it, one ticket each'
-owner: support desk
+owner: a12233
 status: closed
 reviewed: 2026-10-28
 signature: a12233
