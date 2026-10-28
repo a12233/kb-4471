@@ -38,7 +38,7 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 ## This copy
 
 The export above, plus a page that splits #4471 into its problems, one GitHub issue each
-([#1](https://github.com/a12233/kb-4471/issues/1), [#2](https://github.com/a12233/kb-4471/issues/2), [#3](https://github.com/a12233/kb-4471/issues/3)). Page signed `Rex Li`, desk ref DR-D0D6-6QX3:
+([#1](https://github.com/a12233/kb-4471/issues/1), [#2](https://github.com/a12233/kb-4471/issues/2), [#3](https://github.com/a12233/kb-4471/issues/3)). Page signed with the course ticket, desk ref DR-VGW8-ZFG2:
 
 - page: `src/routes/kb/incidents/4471-problems/+page.svx`, built only from the desk's own components
 - the page as the desk sees it: `rendered/kb/incidents/4471-problems.html` (and `.png`)
