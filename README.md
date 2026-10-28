@@ -43,3 +43,5 @@ The export above, plus a page that splits #4471 into its problems, one GitHub is
 - page: `src/routes/kb/incidents/4471-problems/+page.svx`, built only from the desk's own components
 - the page as the desk sees it: `rendered/kb/incidents/4471-problems.html` (and `.png`)
 - build: `npm install && npm run build` (SvelteKit + mdsvex), output in `build/`
+- the kb as the desk sees it, built: `docs/` (`BASE_PATH=/kb-4471 npm run build`, then `build/` → `docs/`),
+  served at https://a12233.github.io/kb-4471/kb/incidents/4471-problems

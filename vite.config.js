@@ -14,7 +14,8 @@ export default defineConfig({
       preprocess: [vitePreprocess(), mdsvex({ extensions: ['.svx'], layout: { runbook } })],
       adapter: adapter({ pages: 'build', assets: 'build', strict: false }),
       inlineStyleThreshold: Infinity,
-      prerender: { entries: ['/kb', '/kb/incidents/4471-problems'], handleHttpError: 'warn', handleMissingId: 'warn' },
+      paths: { base: process.env.BASE_PATH ?? '' },
+      prerender: { entries: ['*'], handleHttpError: 'warn', handleMissingId: 'warn', handleUnseenRoutes: 'warn' },
     }),
   ],
 });
