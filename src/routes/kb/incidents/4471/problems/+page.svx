@@ -1,0 +1,68 @@
+---
+layout: runbook
+title: '#4471 · three problems, one ticket each'
+owner: support desk
+status: open
+reviewed: 2026-10-28
+signature: a12233
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const issues = 'https://github.com/a12233/kb-4471/issues';
+  const tickets = { parser: `${issues}/1`, hint: `${issues}/2`, 'one-day-move': `${issues}/3` };
+</script>
+
+[#4471](/kb/incidents/4471) says one issue, one fix queued. Its own table says otherwise: the
+reports merged into it have two causes, and a few of them are not a flip at all. This page splits
+#4471 into the problems engineering has to fix, one ticket each.
+
+<Callout kind="warn">
+The queued parser fix closes one of these problems. The other two stay open after it ships.
+</Callout>
+
+## The problems
+
+<ProblemTable ticket={4471} {tickets} />
+
+### `parser`: the shared parser reads dates month first
+
+A day-first tenant writes `07/04` for 7 April, and the parser reads 4 July. These reports come in
+by app, by email and through booking-v2's form. This is the fix that is queued.
+
+### `hint`: booking-v3's form tells people to type the month first
+
+booking-v3 prints `MM/DD/YYYY` under its date field, then reads the date the tenant's way, day
+first. People type what the hint says, and day and month swap. Only reports sent through the
+booking-v3 form, at booking-v3 tenants, have this cause. The parser fix does not touch it: the form
+has to print the tenant's own order.
+
+### `one-day-move`: dates land a day early or late
+
+Not a flip. "Invite says Tuesday 12 May. Calendar says Monday 11 May." "Client in Lisbon got
+Tuesday. Client in Toronto got Monday." The date moves by one day, which points at time zones, not
+at day and month order. The desk read these in the report bodies (`desk-notes.json`). By tenant
+they were filed under `parser`, so the parser fix would have closed them unfixed.
+
+## How the reports are counted
+
+- One report per id. The export pages overlap, so some reports come twice.
+- The cause comes from the tenant's locale and booking form, not from intake's tag. Intake guesses
+  from the reporter's browser, and the guess is often wrong: compare "tagged as" below.
+- A report the desk read as a one-day move counts there, wherever its tenant would file it.
+
+## What #4471 shows
+
+<CauseTable ticket={4471} />
+
+## Lessons
+
+- A page can say one thing while its own table says another. Read the table.
+- Merging on subject ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put three problems in
+  one ticket. A subject names the symptom, and all three share it: the wrong day.
+
+<RenderStamp {signature} />
