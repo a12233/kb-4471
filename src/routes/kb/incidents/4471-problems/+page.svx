@@ -8,20 +8,13 @@ signature: a12233
 ---
 
 <script>
-  import ProblemTable from '#lib/kb/ProblemTable.svelte';
   import CauseTable from '#lib/kb/CauseTable.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
   import Callout from '#lib/kb/Callout.svelte';
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
-
-  const issues = 'https://github.com/a12233/kb-4471/issues';
-  const tickets = {
-    parser: { url: `${issues}/1`, state: 'fixed' },
-    hint: { url: `${issues}/2`, state: "won't fix" },
-    'one-day-move': { url: `${issues}/3`, state: 'open' },
-  };
 </script>
 
-[#4471](/kb/incidents/4471) said one issue, one fix queued. Its own table said otherwise: the
+[#4471](/kb/incidents/4471) said one issue, one fix queued. Its own table says otherwise: the
 reports merged into it have two causes, and a few of them are not a flip at all. This page splits
 #4471 into the problems engineering had to fix, one ticket each, and says where each one ended up.
 
@@ -32,7 +25,16 @@ eu locales"). <code>hint</code> won't be fixed: the booking-v3 form is retired.
 
 ## The problems
 
-<ProblemTable ticket={4471} {tickets} />
+<CauseTable ticket={4471} />
+
+| problem | ticket | state |
+| --- | --- | --- |
+| `parser` | [#1](https://github.com/a12233/kb-4471/issues/1) | fixed |
+| `hint` | [#2](https://github.com/a12233/kb-4471/issues/2) | won't fix |
+| one-day move | [#3](https://github.com/a12233/kb-4471/issues/3) | open |
+
+Each ticket carries the count from the table above. The one-day moves are the reports in the note
+under the table: they are counted under `parser` and tracked again in #3.
 
 ### `parser`: the shared parser read dates month first
 
@@ -43,32 +45,31 @@ app, by email and through booking-v2's form. Fixed: the parser now reads dd/mm f
 
 booking-v3 printed `MM/DD/YYYY` under its date field, then read the date the tenant's way, day
 first. People typed what the hint said, and day and month swapped. Only reports sent through the
-booking-v3 form, at booking-v3 tenants, have this cause. The parser fix does not touch it. Won't
-fix: the form is retired, so no new reports can come in this way.
+booking-v3 form, at booking-v3 tenants, have this cause. The table marks it "no ticket of its own";
+it has one now, #2. Won't fix: the form is retired, so no new reports can come in this way.
 
-### `one-day-move`: dates land a day early or late
+### One-day move: dates land a day early or late
 
 Not a flip. "Invite says Tuesday 12 May. Calendar says Monday 11 May." "Client in Lisbon got
 Tuesday. Client in Toronto got Monday." The date moves by one day, which points at time zones, not
 at day and month order. The desk read these in the report bodies (`desk-notes.json`). By tenant
-they are counted under `parser`, and the table keeps them there. The parser fix does not explain
-them, so this ticket stays open until someone checks them against it.
+they are counted under `parser`. The parser fix does not explain them, so #3 stays open until
+someone checks them against it.
 
 <Callout kind="warn">
-Closing #4471 does not close <code>one-day-move</code>. Its ticket stays open.
+Closing #4471 does not close the one-day moves. Their ticket stays open.
 </Callout>
+
+## Since April
+
+<QueueTimeline ticket={4471} />
 
 ## How the reports are counted
 
 - One report per id. The export pages overlap, so some reports come twice.
 - The cause comes from the tenant's locale and booking form, not from intake's tag. Intake guesses
-  from the reporter's browser, and the guess is often wrong: compare "tagged as" below.
-- Counts are the desk's own view, as exported: the same cause groups as #4471's table. A one-day
-  move is counted under its cause and listed again on its own row.
-
-## What #4471 shows
-
-<CauseTable ticket={4471} />
+  from the reporter's browser, and the guess is often wrong: compare "tagged as" in the table.
+- The counts are the desk's own view, as exported.
 
 ## Lessons
 
