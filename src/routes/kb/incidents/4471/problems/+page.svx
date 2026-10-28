@@ -1,8 +1,8 @@
 ---
 layout: runbook
-title: '#4471 · three problems, one ticket each'
+title: '#4471 · the problems inside it, one ticket each'
 owner: support desk
-status: open
+status: closed
 reviewed: 2026-10-28
 signature: a12233
 ---
@@ -14,46 +14,57 @@ signature: a12233
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 
   const issues = 'https://github.com/a12233/kb-4471/issues';
-  const tickets = { parser: `${issues}/1`, hint: `${issues}/2`, 'one-day-move': `${issues}/3` };
+  const tickets = {
+    parser: { url: `${issues}/1`, state: 'fixed' },
+    hint: { url: `${issues}/2`, state: "won't fix" },
+    'one-day-move': { url: `${issues}/3`, state: 'open' },
+  };
 </script>
 
-[#4471](/kb/incidents/4471) says one issue, one fix queued. Its own table says otherwise: the
+[#4471](/kb/incidents/4471) said one issue, one fix queued. Its own table said otherwise: the
 reports merged into it have two causes, and a few of them are not a flip at all. This page splits
-#4471 into the problems engineering has to fix, one ticket each.
+#4471 into the problems engineering had to fix, one ticket each, and says where each one ended up.
 
-<Callout kind="warn">
-The queued parser fix closes one of these problems. The other two stay open after it ships.
+<Callout>
+Engineering closed #4471 on 5 October. <code>parser</code> is fixed ("fix(dates): parse dd/mm for
+eu locales"). <code>hint</code> won't be fixed: the booking-v3 form is retired.
 </Callout>
 
 ## The problems
 
 <ProblemTable ticket={4471} {tickets} />
 
-### `parser`: the shared parser reads dates month first
+### `parser`: the shared parser read dates month first
 
-A day-first tenant writes `07/04` for 7 April, and the parser reads 4 July. These reports come in
-by app, by email and through booking-v2's form. This is the fix that is queued.
+A day-first tenant writes `07/04` for 7 April, and the parser read 4 July. These reports came in by
+app, by email and through booking-v2's form. Fixed: the parser now reads dd/mm for EU locales.
 
-### `hint`: booking-v3's form tells people to type the month first
+### `hint`: booking-v3's form told people to type the month first
 
-booking-v3 prints `MM/DD/YYYY` under its date field, then reads the date the tenant's way, day
-first. People type what the hint says, and day and month swap. Only reports sent through the
-booking-v3 form, at booking-v3 tenants, have this cause. The parser fix does not touch it: the form
-has to print the tenant's own order.
+booking-v3 printed `MM/DD/YYYY` under its date field, then read the date the tenant's way, day
+first. People typed what the hint said, and day and month swapped. Only reports sent through the
+booking-v3 form, at booking-v3 tenants, have this cause. The parser fix does not touch it. Won't
+fix: the form is retired, so no new reports can come in this way.
 
 ### `one-day-move`: dates land a day early or late
 
 Not a flip. "Invite says Tuesday 12 May. Calendar says Monday 11 May." "Client in Lisbon got
 Tuesday. Client in Toronto got Monday." The date moves by one day, which points at time zones, not
 at day and month order. The desk read these in the report bodies (`desk-notes.json`). By tenant
-they were filed under `parser`, so the parser fix would have closed them unfixed.
+they are counted under `parser`, and the table keeps them there. The parser fix does not explain
+them, so this ticket stays open until someone checks them against it.
+
+<Callout kind="warn">
+Closing #4471 does not close <code>one-day-move</code>. Its ticket stays open.
+</Callout>
 
 ## How the reports are counted
 
 - One report per id. The export pages overlap, so some reports come twice.
 - The cause comes from the tenant's locale and booking form, not from intake's tag. Intake guesses
   from the reporter's browser, and the guess is often wrong: compare "tagged as" below.
-- A report the desk read as a one-day move counts there, wherever its tenant would file it.
+- Counts are the desk's own view, as exported: the same cause groups as #4471's table. A one-day
+  move is counted under its cause and listed again on its own row.
 
 ## What #4471 shows
 
